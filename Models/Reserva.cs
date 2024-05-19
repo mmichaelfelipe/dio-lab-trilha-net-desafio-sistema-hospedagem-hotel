@@ -2,6 +2,9 @@ namespace DesafioProjetoHospedagem.Models;
 
 public class Reserva
 {
+    private const int MinimoDiasParaDesconto = 10;
+    private const decimal PorcentagemDesconto = 0.10M;
+
     public List<Pessoa> Hospedes { get; set; }
     public Suite Suite { get; set; }
     public int DiasReservados { get; set; }
@@ -39,11 +42,21 @@ public class Reserva
     {
         decimal valor = DiasReservados * Suite.ValorDiaria;
 
-        if (DiasReservados >= 10)
+        if (AplicarDesconto())
         {
-            valor = valor * 0.9M;
+            valor = CalcularValorDesconto(valor);
         }
 
         return valor;
+    }
+
+    private bool AplicarDesconto()
+    {
+        return DiasReservados >= MinimoDiasParaDesconto;
+    }
+
+    private decimal CalcularValorDesconto(decimal valor)
+    {
+        return valor * (1 - PorcentagemDesconto);
     }
 }
